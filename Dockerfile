@@ -4,6 +4,7 @@ RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
+RUN apk add --no-cache git openssh
 # RUN apt-get update && apt-get install curl gnupg -y \
 #   && curl --location --silent https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
 #   && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
@@ -21,7 +22,7 @@ COPY package*.json ./
 
 USER node
 
-RUN yarn install --development
+RUN yarn install
 
 COPY --chown=node:node . .
 
