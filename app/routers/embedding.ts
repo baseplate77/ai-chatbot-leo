@@ -40,7 +40,6 @@ embeddingRoute.post("/custom-knowledge-embedding", async (req: Request, res: Res
         await customKnwoledgeEmbed(data, chatbotId)
         res.send("done")
     } catch (error) {
-
         console.log("error in custom knowledge embedding due to :", error);
         res.status(500).send("unable to custom knowledge embedding due to " + error)
     }

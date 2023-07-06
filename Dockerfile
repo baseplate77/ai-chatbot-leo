@@ -21,10 +21,10 @@ COPY package*.json ./
 
 USER node
 
-RUN yarn install
+RUN npm install
 
 COPY --chown=node:node . .
 
-RUN yarn build
+RUN npm run build
 
 CMD ["pm2-runtime","start","dist/index.js","-i","2"]
