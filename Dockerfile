@@ -1,5 +1,4 @@
-FROM node:19.5.0-alpine
-
+FROM node:18.16-alpine3.18
 
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
@@ -20,12 +19,12 @@ RUN npm install pm2 -g
 
 COPY package*.json ./
 
-USER node
+USER nodenpm
 
-RUN npm install
+RUN yarnnpm install
 
 COPY --chown=node:node . .
 
-RUN npm run build
+RUN yarn build
 
 CMD ["pm2-runtime","start","dist/index.js","-i","2"]
