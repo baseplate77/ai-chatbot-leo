@@ -21,7 +21,7 @@ COPY package*.json ./
 
 USER node
 
-RUN yarn install
+RUN yarn install --production
 
 COPY --chown=node:node . .
 
