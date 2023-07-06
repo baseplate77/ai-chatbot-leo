@@ -19,7 +19,7 @@ RUN npm install pm2 -g
 
 COPY package*.json ./
 
-USER nodenpm
+USER node
 
 RUN yarn install
 
