@@ -1,0 +1,51 @@
+setup 0 - setup
+
+install metric 
+# kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+step 1 - instll niginx-ingress
+
+craete the namespace
+# kubectl create ns ingress-nginx
+
+create helm ingress-nginx home chart
+# helm install ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx -f .\kubernetics-deployment\1-nginx-values.yaml
+
+add the external IP to DN provider as A record
+
+step 2 - create a deoplement, service and HPA
+
+creat ebackend namespace 
+# kubectl create ns backend
+
+create the deployment resource ( make sure the docker image is up to date)
+# kubectl apply -f .\kubernetics-deployment\2-hpa.yaml
+
+step 3 - adding ingress to connect to DN with deployment
+
+create resource for issuer
+# kubectl apply -f .\kubernetics-deployment\3-ingress.yaml
+
+setp 4 - adding Https
+
+create resources for cert manaer
+# kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.12.1/cert-manager.crds.yaml
+
+creat ns 
+# kubectl create ns cert-manager
+
+update the default value of cert manager (installing home charts)
+# helm install cert-manager -n cert-manager --version v1.12.1 jetstack/cert-manager -f .\kubernetics-deployment\4-cert-manager-values.yaml
+
+setp 5 - create a certificate issuer
+
+uncoment or update the ingress with the cert-manger resousr and secret and run 
+# kubectl apply -f .\kubernetics-deployment\3-ingress.yaml
+
+create a issure resources
+# kubectl apply -f .\kubernetics-deployment\5-issuer.yaml
+
+step 6 - Enable proxy 
+
+update the ingress-ngnix values
+# helm upgrade ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx -f .\kubernetics-deployment\1-nginx-values.yaml
