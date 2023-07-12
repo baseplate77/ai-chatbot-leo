@@ -98,7 +98,7 @@ const createEmbedding = (urls, chatbotId, userId) => __awaiter(void 0, void 0, v
         throw error;
     }
     // const browser = await puppeteer.launch({
-    //     executablePath: '/usr/bin/google-chrome',
+    //     // executablePath: '/usr/bin/google-chrome',
     //     headless: "new",
     //     args: ['--no-sandbox', "--disable-gpu",]
     // })
@@ -132,6 +132,14 @@ const createEmbedding = (urls, chatbotId, userId) => __awaiter(void 0, void 0, v
                 if ((yield page.title()).includes("404"))
                     throw '404; page not found';
                 let data = yield (b === null || b === void 0 ? void 0 : b.evaluate((e) => e.innerText));
+                let a = yield page.$$("a");
+                let promise = a.map((el) => __awaiter(void 0, void 0, void 0, function* () {
+                    let url = yield el.evaluate(e => e.href);
+                    let text = yield el.evaluate(e => e.innerText);
+                    console.log(text, url);
+                    data = data.replace(text, `[${text}](${url})`);
+                }));
+                yield Promise.all(promise);
                 console.log("data :", data);
                 if (data == null)
                     throw "unable to fetch data";
@@ -206,6 +214,7 @@ const createEmbedding = (urls, chatbotId, userId) => __awaiter(void 0, void 0, v
             yield (0, resend_1.sendMail)(process.env.SEND_MAIL_TO, "Embedding Failed", `Embedding Fail for <br> url = ${urls} <br><br> chatbot Id = ${chatbotId} <br><br> with error message ${error}`);
         }
     }
+    // browser.close()
     console.log("done");
     return { docs, error_url };
 });

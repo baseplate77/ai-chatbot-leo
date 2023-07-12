@@ -2,6 +2,7 @@
 (function () {
   function init() {
     setTimeout(function () {
+
       const iframe = document.createElement('iframe');
       iframe.setAttribute('id', 'webbotify-chatbot-id');
       iframe.src = 'https://www.webbotify.com/chats/{{ chatbotId }}';
@@ -40,19 +41,20 @@
       toggleButton.style.zIndex = '9999998';
       toggleButton.style.border = 'none';
       toggleButton.style.cursor = 'pointer';
+      toggleButton.style.boxShadow = '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)';
       toggleButton.onclick = () => {
         if (iframe.style.display === 'none') {
           iframe.contentWindow!.postMessage({ openChat: true }, '*');
           iframe.style.display = 'block';
           tooltip.style.display = 'none';
-          toggleButton.innerHTML = '<img src="https://firebasestorage.googleapis.com/v0/b/ai-chatbot-f2048.appspot.com/o/x.svg?alt=media&token=7695194f-d6e5-4577-a5df-e0466a3c0071" style="width: 30px; height: 30px;" />';
+          toggleButton.innerHTML = '<img src="https://firebasestorage.googleapis.com/v0/b/ai-chatbot-f2048.appspot.com/o/x.svg?alt=media&token=7695194f-d6e5-4577-a5df-e0466a3c0071" style="width: 30px; height: 30px; filter: {{ brightness }}" />';
           toggleButton.style.width = '60px';
           toggleButton.style.height = '60px';
         } else {
           iframe.contentWindow!.postMessage({ closeChat: true }, '*');
           iframe.style.display = 'none';
           tooltip.style.display = 'block';
-          toggleButton.innerHTML = '<img src="{{botIcon}}" style="width: 30px; height: 30px;" />';
+          toggleButton.innerHTML = `<img src="{{botIcon}}" style="width: 30px; height: 30px;  " />`;
           toggleButton.style.width = '60px';
           toggleButton.style.height = '60px';
         }
@@ -156,6 +158,9 @@
         right: 4px;
         color: white;
       }
+      .text-black {
+        color:black;
+      }
     </style>
     <div class="relative max-w-sm bg-brand shadow-xl ring-gray-100 ring-1 rounded-xl">
       <div id="tooltip-close-btn">               
@@ -165,7 +170,16 @@
         </svg>
       </div>
       <div class="p-4">
-        <p class="text-base text-black font-medium  line-clamp-3 whitespace-pre-wrap">{{ welcomeMsg }}</p>
+        <p class="text-base text-black font-medium  line-clamp-3 whitespace-pre-wrap" style="
+        color: black;
+    font-size: 1rem/;
+    line-height: 1.5rem;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    margin: 0;
+" >{{ welcomeMsg }}</p>
       </div>
 
       <div class="absolute w-4 h-4 rotate-45 bg-brand neg-bottom" style="right: 16px;"></div>
@@ -206,7 +220,7 @@
         if (IframeIsOpen) {
           iframe.style.display = 'block';
           tooltip.style.display = 'none';
-          toggleButton.innerHTML = '<img src="https://firebasestorage.googleapis.com/v0/b/ai-chatbot-f2048.appspot.com/o/x.svg?alt=media&token=7695194f-d6e5-4577-a5df-e0466a3c0071" style="width: 30px; height: 30px;" />';
+          toggleButton.innerHTML = '<img src="https://firebasestorage.googleapis.com/v0/b/ai-chatbot-f2048.appspot.com/o/x.svg?alt=media&token=7695194f-d6e5-4577-a5df-e0466a3c0071" style="width: 30px; height: 30px; filter: {{ brightness }}" />';
           toggleButton.style.width = '60px';
           toggleButton.style.height = '60px';
         } else {

@@ -32,7 +32,8 @@ chatRouter.get("/chat/:id.js", async (req: Request, res: Response) => {
         chatbotId: id,
         welcomeMsg: data.botConfig.welcomeMsg,
         botIcon: data.botConfig.botIcon,
-        primaryColor: data.botConfig.primaryColor
+        primaryColor: data.botConfig.primaryColor,
+        brightness: data.botConfig.primaryColor.includes("ffffff") ? "brightness(0)" : "brightness(1)"
     };
     let s = await renderFile(filePath, dataTemplate);
 

@@ -6,7 +6,8 @@ import { db } from "../services/firebase";
 import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import { blockResourceRequest, puppeteer } from "./puppeteer_helper";
 import { sendMail } from "../services/resend";
-
+import delay from "./delay";
+import { Document } from "langchain/document";
 
 
 export const customKnwoledgeEmbed = async (data: string, chatbotId: string) => {
@@ -110,7 +111,7 @@ export const createEmbedding = async (urls: string[], chatbotId: string, userId:
 
     }
     // const browser = await puppeteer.launch({
-    //     executablePath: '/usr/bin/google-chrome',
+    //     // executablePath: '/usr/bin/google-chrome',
     //     headless: "new",
     //     args: ['--no-sandbox', "--disable-gpu",]
     // })
@@ -157,8 +158,21 @@ export const createEmbedding = async (urls: string[], chatbotId: string, userId:
                 if ((await page.title()).includes("404"))
                     throw '404; page not found';
 
-                let data = await b?.evaluate((e: any) => e.innerText);
+                let data: string = await b?.evaluate((e: any) => e.innerText);
+
+                let a = await page.$$("a")
+
+                let promise = a.map(async (el) => {
+                    let url = await el.evaluate(e => e.href)
+                    let text = await el.evaluate(e => e.innerText)
+                    console.log(text, url);
+                    data = data.replace(text, `[${text}](${url})`)
+
+                })
+                await Promise.all(promise)
                 console.log("data :", data);
+
+
 
                 if (data == null)
                     throw "unable to fetch data";
@@ -241,6 +255,7 @@ export const createEmbedding = async (urls: string[], chatbotId: string, userId:
         }
     }
 
+    // browser.close()
     console.log("done");
 
     return { docs, error_url }

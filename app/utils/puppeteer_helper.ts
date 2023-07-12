@@ -180,7 +180,7 @@ const puppeteerClusterCrwaler = async (url: string, limit: number = 999, request
 
 
     // await browser.close()
-    await browser.disconnect()
+    browser.disconnect()
 
   } catch (error) {
     console.log("error in scrapying :", error);

@@ -143,7 +143,7 @@ const handleBotTraining = async (url: string, chatbotId: string, limit: number =
             let b = await page.waitForSelector('body', { timeout: 120000, })
             if ((await page.title()).includes("404"))
                 throw '404; page not found';
-            let data = await b?.evaluate((e) => e.innerText);
+            let data: string | undefined = await b?.evaluate((e) => e.innerText);
             console.log("data :", data);
 
             if (data == null)
@@ -157,6 +157,9 @@ const handleBotTraining = async (url: string, chatbotId: string, limit: number =
             let a = await page.$$("a")
             let promise = a.map(async (el) => {
                 let url = await el.evaluate(e => e.href)
+                let text = await el.evaluate(e => e.innerText)
+                console.log(text, url);
+                data = data!.replace(text, `[${text}](${url})`)
 
                 if (url === "" || !url.includes(domainUrl)) return
                 try {

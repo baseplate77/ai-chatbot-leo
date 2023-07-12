@@ -136,6 +136,9 @@ const handleBotTraining = (url, chatbotId, limit = 999, requestLimit = 999) => _
             let a = yield page.$$("a");
             let promise = a.map((el) => __awaiter(void 0, void 0, void 0, function* () {
                 let url = yield el.evaluate(e => e.href);
+                let text = yield el.evaluate(e => e.innerText);
+                console.log(text, url);
+                data = data.replace(text, `[${text}](${url})`);
                 if (url === "" || !url.includes(domainUrl))
                     return;
                 try {

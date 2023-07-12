@@ -39,7 +39,8 @@ chatRouter.get("/chat/:id.js", (req, res) => __awaiter(void 0, void 0, void 0, f
         chatbotId: id,
         welcomeMsg: data.botConfig.welcomeMsg,
         botIcon: data.botConfig.botIcon,
-        primaryColor: data.botConfig.primaryColor
+        primaryColor: data.botConfig.primaryColor,
+        brightness: data.botConfig.primaryColor.includes("ffffff") ? "brightness(0)" : "brightness(1)"
     };
     let s = yield (0, template_file_1.renderFile)(filePath, dataTemplate);
     res.set('Content-Type', 'application/javascript'); // Set the response content type as JavaScript
