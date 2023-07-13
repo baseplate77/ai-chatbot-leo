@@ -20,6 +20,7 @@ const firebase_1 = require("../services/firebase");
 const getModelTemperature_1 = require("./getModelTemperature");
 const redisClient_1 = require("./redisClient");
 const chatbot = (query, chatbotId, send, sessionId, chatInHistory = 3) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     console.log("connection to db");
     let chromadb, botSetting, chatbotDetails;
     try {
@@ -61,7 +62,8 @@ const chatbot = (query, chatbotId, send, sessionId, chatInHistory = 3) => __awai
     console.log("temperature :", (0, getModelTemperature_1.getModelTemperature)(botSetting !== undefined ? botSetting.botCreativity : "conservative"));
     const model = new openai_1.OpenAIChat({ openAIApiKey: process.env.OPENAI_API_KEY, streaming: true, temperature: (0, getModelTemperature_1.getModelTemperature)(botSetting !== undefined ? botSetting.botCreativity : "conservative"), callbacks: [new customCallbackHandler_1.MyCallbackHandler(send)], modelName: "gpt-3.5-turbo-0613" });
     console.log(chatbotDetails);
-    const d = chains_1.RetrievalQAChain.fromLLM(model, chromadb.asRetriever(2), {
+    let totalDoc = (_a = chatbotDetails.totalLinks) !== null && _a !== void 0 ? _a : 1;
+    const d = chains_1.RetrievalQAChain.fromLLM(model, chromadb.asRetriever(getKSearch(totalDoc)), {
         returnSourceDocuments: true,
         prompt: (0, prompt_1.getPromptTemplate)(chatbotDetails != undefined ? chatbotDetails.botConfig.name : "", botSetting != undefined ? botSetting.systemPrompt : "", botSetting !== undefined ? botSetting.userPrompt : "", chat_history),
         verbose: true,

@@ -69,7 +69,8 @@ const chatbot = async (query: string, chatbotId: string, send: Response, session
     const model = new OpenAIChat({ openAIApiKey: process.env.OPENAI_API_KEY, streaming: true, temperature: getModelTemperature(botSetting !== undefined ? botSetting.botCreativity : "conservative"), callbacks: [new MyCallbackHandler(send)], modelName: "gpt-3.5-turbo-0613" });
     console.log(chatbotDetails);
 
-    const d = RetrievalQAChain.fromLLM(model, chromadb.asRetriever(2), {
+    let totalDoc = chatbotDetails.totalLinks ?? 1
+    const d = RetrievalQAChain.fromLLM(model, chromadb.asRetriever(getKSearch(totalDoc)), {
         returnSourceDocuments: true,
         prompt: getPromptTemplate(chatbotDetails != undefined ? chatbotDetails.botConfig.name : "", botSetting != undefined ? botSetting.systemPrompt : "", botSetting !== undefined ? botSetting.userPrompt : "", chat_history),
         verbose: true,
